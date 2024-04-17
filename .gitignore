@@ -1,2 +1,12 @@
 node_modules
 dist
+.DS_Store
+src/.DS_Store
+src/blocks/.DS_Store
+src/blocks/card/.DS_Store
+src/blocks/page/.DS_Store
+src/blocks/places/.DS_Store
+src/blocks/popup/.DS_Store
+src/blocks/profile/.DS_Store
+src/components/.DS_Store
+.vscode
