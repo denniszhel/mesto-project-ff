@@ -1,0 +1,24 @@
+.popup__input_invalid {
+  border-bottom: 1px solid #ff0000;
+}
+
+.popup__input_error {
+  position: absolute;
+  top: calc(100% - 7px);
+  left: 0;
+  transition: 0.3s;
+  opacity: 0;
+  font-family: "Inter", Verdana, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #ff0000;
+  z-index: 1;
+}
+
+.popup__form_fieldset:last-of-type .popup__input_error:last-of-type {
+  top: calc(100% + 2px);
+}
+
+.popup__error_visible {
+  opacity: 1;
+}

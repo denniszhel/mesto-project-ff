@@ -1,0 +1,7 @@
+.card__like-group {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  gap: 3px;
+  min-height: 38px;
+}

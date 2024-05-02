@@ -10,7 +10,7 @@
   margin-bottom: 10px;
 }
 
-.popup__input:last-of-type {
+.popup__form_fieldset:last-of-type .popup__input:last-of-type {
   margin-bottom: 0;
 }
 

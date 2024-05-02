@@ -19,6 +19,18 @@
   cursor: pointer;
 }
 
+.popup__button_disabled {
+  color: black;
+  background: none;
+  border: 1px solid black;
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.popup_type_delete-confirm .popup__button {
+  margin-top: 0;
+}
+
 @media screen and (max-width: 568px) {
   .popup__button {
     font-size: 14px;
