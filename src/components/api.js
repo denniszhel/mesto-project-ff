@@ -1,4 +1,3 @@
-import { Promise } from "core-js";
 import { checkResponse } from "./utils";
 
 const config = {
