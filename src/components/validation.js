@@ -1,3 +1,5 @@
+// const urlPattern = new RegExp(/^(?:(?:https?|ftp|telnet):\/\/(?:[a-z0-9_-]{1,32}(?::[a-z0-9_-]{1,32})?@)?)?(?:(?:[a-z0-9-]{1,128}\.)+(?:com|net|org|mil|edu|arpa|ru|gov|biz|info|aero|inc|name|[a-z]{2})|(?!0)(?:(?!0[^.]|255)[0-9]{1,3}\.){3}(?!0|255)[0-9]{1,3})(?:\/[a-z0-9.,_@%&?+=\~\/-]*)?(?:#[^ \'\"&<>]*)?$/i);
+
 function showInputError(formElement, inputElement, validationConfig) {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
   inputElement.classList.add(validationConfig.inputErrorClass);
@@ -12,23 +14,31 @@ function hideInputError(formElement, inputElement, validationConfig) {
   errorElement.textContent = '';
 };
 
-function checkInputValidity(formElement, inputElement, validationConfig) {
-  inputElement.setCustomValidity("");
-  if (inputElement.type === "url") {
-    const imageFileExtArray = ["png", "pcx", "bmp", "jpg", "jpeg", "tiff"];
-    const curLinkExt = inputElement.value.split(".").pop().toLowerCase();
-    inputElement.setCustomValidity(imageFileExtArray.includes(curLinkExt) ? "" : "Ссылка не указывает на изображение.");
-  }
-  if (inputElement.validity.patternMismatch) {
-    inputElement.setCustomValidity(inputElement.validationMessage + ". " + inputElement.dataset.errorMessage);
-  } else {
-    inputElement.setCustomValidity(inputElement.validationMessage);
-  }
+function isImgUrlValid(link) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.src = link;
+    img.onload = resolve;
+    img.onerror = reject;
+  });
+}
+
+function displayInputError(formElement, inputElement, validationConfig) {
   if (!inputElement.validity.valid) {
     showInputError(formElement, inputElement, validationConfig);
   } else {
     hideInputError(formElement, inputElement, validationConfig);
   }
+}
+
+function checkInputValidity(formElement, inputElement, validationConfig) { 
+  if (inputElement.validity.patternMismatch) { 
+    inputElement.setCustomValidity(inputElement.dataset.errorMessage); 
+  } else { 
+    inputElement.setCustomValidity(""); 
+  } 
+  displayInputError(formElement, inputElement, validationConfig);
+  return inputElement.validity.valid;
 };
 
 function hasInvalidInput(inputList) {
@@ -40,9 +50,16 @@ function hasInvalidInput(inputList) {
 function toggleButtonState(inputList, buttonElement, validationConfig) {
   if (hasInvalidInput(inputList)) {
     buttonElement.classList.add(validationConfig.inactiveButtonClass);
+    buttonElement.disabled = true;
   } else {
     buttonElement.classList.remove(validationConfig.inactiveButtonClass);
+    buttonElement.disabled = false;
   }
+}
+
+function disableButton(buttonElement, validationConfig) {
+  buttonElement.classList.add(validationConfig.inactiveButtonClass);
+  buttonElement.disabled = true;
 }
 
 function setEventListeners(formElement, validationConfig)  {
@@ -53,8 +70,20 @@ function setEventListeners(formElement, validationConfig)  {
 
   inputList.forEach((inputElement) => {
     inputElement.addEventListener('input', () => {
-      checkInputValidity(formElement, inputElement, validationConfig);
-      toggleButtonState(inputList, buttonElement, validationConfig);
+      const inputValid = checkInputValidity(formElement, inputElement, validationConfig);
+      if (inputValid && inputElement.type === "url") {
+        disableButton(buttonElement, validationConfig);
+        isImgUrlValid(inputElement.value).then(() => {
+          inputElement.setCustomValidity("");
+        }).catch(() => {
+          inputElement.setCustomValidity("Ссылка не указывает на изображение."); 
+        }).finally(() => {
+          displayInputError(formElement, inputElement, validationConfig);
+          toggleButtonState(inputList, buttonElement, validationConfig);
+        });
+      } else {
+        toggleButtonState(inputList, buttonElement, validationConfig);
+      }
     });
   });
 }

@@ -1,7 +1,3 @@
-import { Promise } from "core-js";
-import { deleteCreatedCard, putLike, deleteLike } from "./api.js";
-import { openModal } from "./modal.js";
-
 // Темплейт карточки
 const cardTemplate = document.querySelector("#card-template");
 
@@ -27,55 +23,17 @@ export function getCardElem(cardObj, funcObj, currentUserId = undefined) {
     }
     cardElem.querySelector(".card__like-button").addEventListener("click", funcObj.likeCardFunction);
     if ("likes" in cardObj) {
+      const likeElem = cardElem.querySelector(".card__like-button");
       const likeCount = cardObj.likes.length;
       const likeCountElem = cardElem.querySelector(".card__like-count");
+      likeCountElem.textContent = likeCount;
       if (likeCount) {
         likeCountElem.classList.remove("card__like-count_zero");
+        if (cardObj.likes.find(likeUser => likeUser._id === currentUserId)) {
+          likeElem.classList.add("card__like-button_is-active");
+        }
       }
-      likeCountElem.textContent = likeCount;
     }
   }
   return cardElem;
 }
-
-// Функция удаления карточки
-export function deleteCardConfirm(evt) {
-  const cardElem = evt.target.closest(".places__item");
-  const popup = document.querySelector(".popup_type_delete-confirm");
-  popup.setAttribute("data-card-id", cardElem.getAttribute("data-card-id"));
-  openModal(popup);
-}
-
-// Функция проставления лайка
-export function likeCard(evt) {
-  const likeElem = evt.target;
-  const likeIsActiveClass = "card__like-button_is-active";
-  const likeCountZeroClass = "card__like-count_zero";
-  const cardId = likeElem.closest(".places__item").getAttribute("data-card-id");
-  const likeCountElem = likeElem.closest(".card__like-group").querySelector(".card__like-count");
-
-  const likeFunction = likeElem.classList.contains(likeIsActiveClass) ? deleteLike : putLike;
-
-  likeFunction(cardId).then(res => {
-    if (res.ok) {
-      return res.json();
-    } else {
-      return Promise.reject(res.status);
-    }
-  }).then(data => {
-    likeCountElem.textContent = data.likes.length;
-    if (data.likes.length) {
-      if (likeCountElem.classList.contains(likeCountZeroClass)) {
-        likeCountElem.classList.remove(likeCountZeroClass);
-      }
-    } else {
-      if (!likeCountElem.classList.contains(likeCountZeroClass)) {
-        likeCountElem.classList.add(likeCountZeroClass);
-      }
-    }
-    likeElem.classList.toggle(likeIsActiveClass);
-  }).catch(err => {
-    alert(`Ошибка: ${err}`);
-  });
-}
-

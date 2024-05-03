@@ -95,7 +95,9 @@
             name="link" 
             class="popup__input popup__input_type_url" 
             placeholder="Ссылка на картинку" 
-            required>
+            required
+            pattern="^(http(s){0,1}:\/\/.){0,1}[\-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([\-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)$"
+            data-error-message="Неверный формат адреса изображения">
           <span class="popup__input_error popup__input_type_url-error"></span>
         </fieldset>
         <button type="submit" class="button popup__button">Сохранить</button>
@@ -131,8 +133,10 @@
           name="link" 
           class="popup__input popup__input_type_url" 
           placeholder="Ссылка на картинку" 
-          required>
-        <span class="popup__input_error popup_type_edit-avatar_url-error"></span>
+          required
+          pattern="^(http(s){0,1}:\/\/.){0,1}[\-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([\-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)$"
+          data-error-message="Неверный формат адреса изображения">
+      <span class="popup__input_error popup_type_edit-avatar_url-error"></span>
       </fieldset>
       <button type="submit" class="button popup__button">Сохранить</button>
     </form>

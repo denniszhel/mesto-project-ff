@@ -1,10 +1,13 @@
+import { Promise } from "core-js";
+import { checkResponse } from "./utils";
+
 const config = {
   baseUrl: 'https://nomoreparties.co/v1/wff-cohort-12',
   headers: {
     authorization: '329fcab9-eb6e-4473-91c4-93af6c51021c',
     'Content-Type': 'application/json'
   }
-}
+};
 
 /**
  * Функция получает данных текущего пользователя
@@ -13,13 +16,7 @@ const config = {
 export const getUserData = () => {
   return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers
-  }).then(res => {
-    if (res.ok) {
-      return res.json();
-    } else {
-      Promise.reject(res.status);
-    }
-  });
+  }).then(checkResponse);
 }
 
 /**
@@ -42,13 +39,7 @@ export const getUserData = () => {
 export const getCardList = () => {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers
-  }).then(res => {
-    if (res.ok) {
-      return res.json();
-    } else {
-      Promise.reject(res.status);
-    }
-  });
+  }).then(checkResponse);
 }
 
 /**
@@ -65,7 +56,7 @@ export const setUserData = (name, description) => {
       name: name,
       about: description
     })
-  });
+  }).then(checkResponse);
 }
 
 /**
@@ -91,13 +82,7 @@ export const addNewCard = (cardObj) => {
     method: "POST",
     headers: config.headers,
     body: JSON.stringify(cardObj)
-  }).then(res => {
-    if (res.ok) {
-      return res.json();
-    } else {
-      return Promise.reject(res.status);
-    }
-  });
+  }).then(checkResponse);
 }
 
 /**
@@ -120,7 +105,7 @@ export const deleteCreatedCard = (cardId) => {
   return fetch(`${config.baseUrl}/cards/${cardId}`, {
     method: "DELETE",
     headers: config.headers
-  });
+  }).then(checkResponse);
 }
 
 /**
@@ -143,7 +128,7 @@ export const putLike = (cardId) => {
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
     method: "PUT",
     headers: config.headers
-  });
+  }).then(checkResponse);
 }
 
 /**
@@ -166,7 +151,7 @@ export const deleteLike = (cardId) => {
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
     method: "DELETE",
     headers: config.headers
-  });
+  }).then(checkResponse);
 }
 
 export const editAvatar = (link) => {
@@ -176,5 +161,5 @@ export const editAvatar = (link) => {
     body: JSON.stringify({
       avatar: link
     })
-  });
+  }).then(checkResponse);
 }
